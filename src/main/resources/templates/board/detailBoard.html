@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- header -->
+<head th:replace="fragments/header :: header">
+</head>
+
+<body>
+
+<!-- 메뉴 -->
+<nav th:replace="fragments/nav :: nav"></nav>
+
+<!-- 본문-->
+<div class="container-fluid p-0">
+    <section class="resume-section">
+        <div class="resume-section-content">
+
+            <table class="table" style="text-align: left">
+                <tr>
+                    <th>제목</th>
+                    <td th:text="${board.title}">제목</td>
+                    <th>작성일</th>
+                    <td th:text="*{#temporals.format(board.createdTime, 'yyyy-MM-dd HH:mm:ss')}">작성일</td>
+                </tr>
+                <tr>
+                    <th>작성자</th>
+                    <td th:text="'temp'">작성자</td>
+                    <th>수정일</th>
+                    <td th:text="*{#temporals.format(board.updatedTime, 'yyyy-MM-dd HH:mm:ss')}">수정일</td>
+                    <th>조회수</th>
+                    <td th:text="${board.boardHits}">조회수</td>
+
+                </tr>
+            </table>
+
+            <br>
+
+            <div>
+                <p th:text="${board.content}">글내용</p>
+            </div>
+
+            <br><br><br><hr>
+
+            <div id="view-menu">
+                <div class="fl" style="text-align: right">
+                    <input class="btn-two orange" type="button" value="수정" onclick="goModify()" />
+                    <input class="btn-two orange" type="button" value="삭제" onclick="goDelete()" />
+                    <input class="btn-two orange" type="button" value="목록" onclick="goList()" />
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+    <hr class="m-0" />
+</div>
+<script th:inline="javascript">
+
+    const goModify = () => {
+        location.href = "/board/update/" + [[${board.id}]];
+    }
+
+    const goDelete = () => {
+        location.href = "/board/delete/" + [[${board.id}]];
+
+    }
+
+    const goList = () => {
+        location.href = "/";
+    }
+
+</script>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/js/scripts.js"></script>
+</body>
+</html>

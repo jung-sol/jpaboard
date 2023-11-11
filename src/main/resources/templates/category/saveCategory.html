@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- header -->
+<head th:replace="fragments/header :: header">
+</head>
+
+<body>
+
+<!-- 메뉴 -->
+<nav th:replace="fragments/nav :: nav"></nav>
+
+<!-- 본문-->
+<div class="container-fluid p-0">
+    <section class="resume-section">
+        <div class="resume-section-content">
+
+            <form role="form" action="/category/new" method="post">
+
+                <div class="form-group">
+                    <input name="name" class="form-control" id="name" placeholder="게시판명을 입력하세요">
+                </div>
+
+                <br><br>
+                <div style="text-align: right">
+                    <button type="submit" class="btn-two orange">등록</button>
+                </div>
+            </form>
+
+
+        </div>
+    </section>
+    <hr class="m-0" />
+</div>
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/js/scripts.js"></script>
+</body>
+</html>
