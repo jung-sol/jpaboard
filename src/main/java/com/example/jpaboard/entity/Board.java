@@ -26,6 +26,10 @@ public class Board extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public static Board toBoard(BoardDTO boardDTO) {
         Board board = new Board();
 
