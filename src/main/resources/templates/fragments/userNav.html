@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<section th:fragment="userNav" style="text-align: right">
+  <div th:if="${nickname == null}">
+    <a class="userNav" th:onclick="|location.href='@{/user/join}'|">회원가입</a> |
+    <a class="userNav" th:onclick="|location.href='@{/user/login}'|">로그인</a>
+  </div>
+
+  <div th:unless="${nickname == null}">
+    <a class="userNav" th:onclick="|location.href='@{/user/info}'|">내 정보</a> |
+    <a class="userNav" th:onclick="|location.href='@{/user/logout}'|">로그아웃</a> |
+    <a class="userNav" th:onclick="|location.href='@{/user/join}'|">관리자 페이지</a> |
+  </div>
+</section>

@@ -16,17 +16,18 @@
     <section class="resume-section">
         <div class="resume-section-content">
 
-            <form role="form" action="/category/update" method="post">
+            <form role="form" th:method="post" th:action="|@{/user/updateNickname}|" th:object="${nicknameRequest}">
 
                 <div class="form-group">
-                    <input type="hidden" name="id" th:value="${category.id}">
-                    <input name="name" class="form-control" id="name" th:field="${category.name}">
+                    <input type="text" th:field="*{nickname}" class="form-control" placeholder="닉네임" th:errorclass="error-input">
+                    <div class="error-class" th:errors="*{nickname}"></div>
                 </div>
 
-                <br><br>
+                <br>
                 <div style="text-align: right">
-                    <button type="submit" class="btn-two orange">수정</button>
+                    <button type="submit" class="btn btn-primary">수정</button>
                 </div>
+
             </form>
 
 
@@ -34,7 +35,6 @@
     </section>
     <hr class="m-0" />
 </div>
-
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
