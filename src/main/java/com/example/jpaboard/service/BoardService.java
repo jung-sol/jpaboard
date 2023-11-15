@@ -94,4 +94,21 @@ public class BoardService {
 
         return boardDTOS;
     }
+
+    public List<BoardDTO> findByUserLoginId(String userLoginId) {
+        Optional<User> optionalUser = userRepository.findByLoginId(userLoginId);
+
+        if (optionalUser.isEmpty()) {
+            return null;
+        }
+
+        List<Board> boards = boardRepository.findByUserId(optionalUser.get());
+        System.out.println(boards.size());
+        List<BoardDTO> boardDTOS = new ArrayList<>();
+        for (Board board : boards) {
+            boardDTOS.add(BoardDTO.toBoardDTO(board));
+        }
+
+        return boardDTOS;
+    }
 }

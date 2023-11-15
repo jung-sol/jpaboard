@@ -109,4 +109,13 @@ public class BoardController {
 
         return "index";
     }
+
+    @GetMapping("/user/{loginId}")
+    public String findByLoginId(@PathVariable String loginId, Model model) {
+        List<BoardDTO> boards = boardService.findByUserLoginId(loginId);
+        model.addAttribute("boards", boards);
+        model.addAttribute("pageName", loginId + "님이 작성한 글");
+
+        return "index";
+    }
 }

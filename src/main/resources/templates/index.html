@@ -16,6 +16,11 @@
         <section class="resume-section">
             <div class="resume-section-content">
 
+                <div th:if="${pageName != null}">
+                    <h2 th:text="${pageName}"></h2> <br><br>
+                </div>
+
+
                 <table class="table">
                     <tr>
                         <th>제목</th>
