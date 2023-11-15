@@ -17,11 +17,7 @@
         <div class="resume-section-content">
 
             <!-- 입력값 받는 곳 -->
-            <form role="form" action="/board/update" method="post">
-
-                <input type="hidden" name="id" th:field="${board.id}">
-                <input type="hidden" name="id" th:field="${board.boardHits}">
-                <input type="hidden" name="id" th:field="${board.createdTime}">
+            <form role="form" th:action="|/board/${board.id}/update|" method="post">
 
                 <div class="form-group">
                     <select name="category" id="category" class="form-control">

@@ -22,11 +22,11 @@ public class Board extends BaseEntity{
 
     private int boardHits;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -38,8 +38,23 @@ public class Board extends BaseEntity{
         board.setContent(boardDTO.getContent());
         board.setBoardHits(boardDTO.getBoardHits());
         board.setCategory(boardDTO.getCategory());
+//        board.setUser(boardDTO.getUser());
 
         return board;
+    }
+
+    /*
+        연관관계 메서드
+     */
+    public void setUser(User user) {
+        this.user = user;
+        user.getBoards().add(this);
+    }
+
+    public void updateBoard(Category category, String title, String content) {
+        this.category = category;
+        this.title = title;
+        this.content = content;
     }
 
 }

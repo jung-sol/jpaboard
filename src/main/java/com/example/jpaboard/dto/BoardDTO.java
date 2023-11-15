@@ -2,6 +2,7 @@ package com.example.jpaboard.dto;
 
 import com.example.jpaboard.entity.Board;
 import com.example.jpaboard.entity.Category;
+import com.example.jpaboard.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,13 +27,16 @@ public class BoardDTO {
 
     private LocalDateTime updatedTime;
 
-    public BoardDTO(Long id, String title, String content, int boardHits, Category category, LocalDateTime createdTime) {
+    private User user;
+
+    public BoardDTO(Long id, String title, String content, int boardHits, Category category, LocalDateTime createdTime, User user) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.boardHits = boardHits;
         this.category = category;
         this.createdTime = createdTime;
+        this.user = user;
     }
 
     public static BoardDTO toBoardDTO(Board board) {
@@ -45,6 +49,7 @@ public class BoardDTO {
         boardDTO.setCategory(board.getCategory());
         boardDTO.setCreatedTime(board.getCreatedTime());
         boardDTO.setUpdatedTime(board.getUpdatedTime());
+        boardDTO.setUser(board.getUser());
 
         return boardDTO;
     }
@@ -59,6 +64,7 @@ public class BoardDTO {
                 ", category=" + category +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
+                ", user=" + user +
                 '}';
     }
 }

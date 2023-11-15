@@ -32,11 +32,7 @@ public class HomeController {
         model.addAttribute("boards", boards);
 
         if (auth != null) {
-            User loginUser = userService.getLoginUserByLoginId(auth.getName());
-
-            if (loginUser != null) {
-                model.addAttribute("nickname", loginUser.getNickname());
-            }
+            model.addAttribute("loginId", auth.getName());
         }
 
         return "index";

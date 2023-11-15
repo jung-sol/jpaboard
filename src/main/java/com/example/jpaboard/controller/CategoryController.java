@@ -1,11 +1,14 @@
 package com.example.jpaboard.controller;
 
 import com.example.jpaboard.dto.CategoryDTO;
+import com.example.jpaboard.entity.User;
 import com.example.jpaboard.service.CategoryService;
+import com.example.jpaboard.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +22,21 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final UserService userService;
 
     @ModelAttribute("categories")
     public List<CategoryDTO> categories() {
         List<CategoryDTO> categories = categoryService.list();
 
         return categories;
+    }
+
+    @ModelAttribute("loginId")
+    public String loginId(Authentication auth) {
+        if (auth != null) {
+            return auth.getName();
+        }
+        return null;
     }
 
     @GetMapping("/new")

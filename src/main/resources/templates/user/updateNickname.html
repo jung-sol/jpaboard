@@ -16,7 +16,7 @@
     <section class="resume-section">
         <div class="resume-section-content">
 
-            <form role="form" th:method="post" th:action="|@{/user/updateNickname}|" th:object="${nicknameRequest}">
+            <form role="form" th:method="post" th:action="|@{/user/updateNickname}|" th:object="${updateNicknameRequest}">
 
                 <div class="form-group">
                     <input type="text" th:field="*{nickname}" class="form-control" placeholder="닉네임" th:errorclass="error-input">

@@ -2,7 +2,7 @@ package com.example.jpaboard.service;
 
 import com.example.jpaboard.dto.JoinRequest;
 import com.example.jpaboard.dto.LoginRequest;
-import com.example.jpaboard.dto.UpdateRequest;
+import com.example.jpaboard.dto.UpdatePasswordRequest;
 import com.example.jpaboard.entity.User;
 import com.example.jpaboard.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
@@ -26,16 +27,21 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
+    @Transactional
     public void join(JoinRequest req) {
         userRepository.save(req.toUser());
     }
 
+    @Transactional
     public void join2(JoinRequest req) {
         userRepository.save(req.toUser(encoder.encode(req.getPassword())));
     }
 
-    public void updatePassword(UpdateRequest req) {
-        userRepository.save(req.toUser(encoder.encode(req.getPassword())));
+    @Transactional
+    public void updatePassword(String loginId, String password) {
+        Optional<User> optionalUser = userRepository.findByLoginId(loginId);
+        User user = optionalUser.get();
+        user.updatePassword(encoder.encode(password));
     }
 
     @Transactional
