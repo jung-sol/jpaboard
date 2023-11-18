@@ -36,4 +36,8 @@ public class User {
         this.password = encodedPassword;
     }
 
+    public void updateRole(UserRole role) {
+        this.role = role;
+    }
+
 }

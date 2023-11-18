@@ -3,13 +3,18 @@ package com.example.jpaboard.service;
 import com.example.jpaboard.dto.JoinRequest;
 import com.example.jpaboard.dto.LoginRequest;
 import com.example.jpaboard.dto.UpdatePasswordRequest;
+import com.example.jpaboard.dto.UserDTO;
 import com.example.jpaboard.entity.User;
+import com.example.jpaboard.entity.UserRole;
 import com.example.jpaboard.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.relation.Role;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,6 +54,18 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByLoginId(loginId);
         User user = optionalUser.get();
         user.setNickname(nickname);
+    }
+
+    @Transactional
+    public void updateRole(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        User user = optionalUser.get();
+
+        if (user.getRole() == UserRole.USER) {
+            user.updateRole(UserRole.ADMIN);
+        } else {
+            user.updateRole(UserRole.USER);
+        }
     }
 
     public User login(LoginRequest req) {
@@ -96,5 +113,15 @@ public class UserService {
 
     public boolean checkPassword(String inputPassword, String inDBPassword) {
         return encoder.matches(inputPassword, inDBPassword);
+    }
+
+    public List<UserDTO> list() {
+        List<User> userList = userRepository.findAll();
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for (User user : userList) {
+            userDTOList.add(UserDTO.toUserDTO(user));
+        }
+
+        return userDTOList;
     }
 }

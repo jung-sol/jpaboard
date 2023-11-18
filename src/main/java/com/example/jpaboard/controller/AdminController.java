@@ -1,7 +1,7 @@
 package com.example.jpaboard.controller;
 
 import com.example.jpaboard.dto.CategoryDTO;
-import com.example.jpaboard.entity.User;
+import com.example.jpaboard.dto.UserDTO;
 import com.example.jpaboard.service.CategoryService;
 import com.example.jpaboard.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,8 @@ import java.util.List;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/category")
-public class CategoryController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final CategoryService categoryService;
     private final UserService userService;
@@ -39,23 +39,28 @@ public class CategoryController {
         return null;
     }
 
-    @GetMapping("/new")
+    @GetMapping("/admin")
+    public String adminForm() {
+        return "admin/admin";
+    }
+
+    @GetMapping("/category/new")
     public String createForm() {
         return "category/saveCategory";
     }
 
-    @PostMapping("/new")
+    @PostMapping("/category/new")
     public String create(@ModelAttribute CategoryDTO categoryDTO) {
         categoryService.save(categoryDTO);
-        return "redirect:/category/list";
+        return "redirect:/admin/category/list";
     }
 
-    @GetMapping("/list")
+    @GetMapping("/category/list")
     public String list() {
         return "category/listCategory";
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/category/update/{id}")
     public String updateForm(@PathVariable Long id, Model model) {
         CategoryDTO category = categoryService.findById(id);
         model.addAttribute("category", category);
@@ -63,29 +68,40 @@ public class CategoryController {
         return "category/updateCategory";
     }
 
-    @PostMapping("/update")
+    @PostMapping("/category/update")
     public String update(@ModelAttribute CategoryDTO categoryDTO) {
         categoryService.update(categoryDTO);
 
-        return "redirect:/category/list";
+        return "redirect:/admin/category/list";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/category/delete/{id}")
     public String delete(@PathVariable Long id) {
         categoryService.delete(id);
 
-        return "redirect:/category/list";
+        return "redirect:/admin/category/list";
     }
 
+    @GetMapping("/user/list")
+    public String userList(Model model) {
+        List<UserDTO> users = userService.list();
+        model.addAttribute("users", users);
+
+        return "admin/listUser";
+    }
+
+    @GetMapping("/user/update/{id}")
+    public String updateRole(@PathVariable Long id) {
+        userService.updateRole(id);
+
+        return "redirect:/admin/user/list";
+    }
 
     @ExceptionHandler({IllegalStateException.class})
     public ResponseEntity<?> IllegalArgumentHandler(IllegalStateException e) {
         log.warn(e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
-
-
 
 
 }

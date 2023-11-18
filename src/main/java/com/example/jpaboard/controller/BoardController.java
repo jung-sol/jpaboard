@@ -110,6 +110,9 @@ public class BoardController {
         return "index";
     }
 
+    /*
+    로그인 아이디로 글 목록 return
+     */
     @GetMapping("/user/{loginId}")
     public String findByLoginId(@PathVariable String loginId, Model model) {
         List<BoardDTO> boards = boardService.findByUserLoginId(loginId);
@@ -118,4 +121,5 @@ public class BoardController {
 
         return "index";
     }
+
 }

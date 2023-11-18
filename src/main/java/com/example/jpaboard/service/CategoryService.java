@@ -8,6 +8,7 @@ import com.example.jpaboard.repository.BoardRepository;
 import com.example.jpaboard.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final BoardRepository boardRepository;
 
+    @Transactional
     public Long save(CategoryDTO categoryDTO) {
         Category category = Category.toCategory(categoryDTO);
         categoryRepository.save(category);
@@ -44,12 +47,14 @@ public class CategoryService {
         }
     }
 
+    @Transactional
     public Long update(CategoryDTO categoryDTO) {
         Category category = Category.toCategory(categoryDTO);
         categoryRepository.save(category);
         return category.getId();
     }
 
+    @Transactional
     public Long delete(Long id) {
         vaildateExistBoard(id);
         categoryRepository.deleteById(id);

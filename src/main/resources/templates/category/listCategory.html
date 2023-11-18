@@ -40,7 +40,7 @@
 <script th:inline="javascript">
 
     const goAdd = () => {
-        location.href = "/category/new";
+        location.href = "/admin/category/new";
 
     }
 
@@ -50,7 +50,7 @@
             alert("수정할 게시판을 선택해주세요");
         } else {
             const chkVal = document.querySelector("input[type=radio][name=category]:checked").value;
-            location.href = "/category/update/" + chkVal;
+            location.href = "/admin/category/update/" + chkVal;
         }
     }
 
@@ -60,7 +60,7 @@
             alert("삭제할 게시판을 선택해주세요");
         } else {
             const chkVal = document.querySelector("input[type=radio][name=category]:checked").value;
-            location.href = "/category/delete/" + chkVal;
+            location.href = "/admin/category/delete/" + chkVal;
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.jpaboard.service;
 
 import com.example.jpaboard.dto.BoardDTO;
+import com.example.jpaboard.dto.UserDTO;
 import com.example.jpaboard.entity.Board;
 import com.example.jpaboard.entity.Category;
 import com.example.jpaboard.entity.User;
@@ -103,7 +104,6 @@ public class BoardService {
         }
 
         List<Board> boards = boardRepository.findByUserId(optionalUser.get());
-        System.out.println(boards.size());
         List<BoardDTO> boardDTOS = new ArrayList<>();
         for (Board board : boards) {
             boardDTOS.add(BoardDTO.toBoardDTO(board));
@@ -111,4 +111,6 @@ public class BoardService {
 
         return boardDTOS;
     }
+
+
 }
