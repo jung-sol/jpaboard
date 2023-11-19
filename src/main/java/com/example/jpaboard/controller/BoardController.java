@@ -3,11 +3,13 @@ package com.example.jpaboard.controller;
 import com.example.jpaboard.dto.BoardDTO;
 import com.example.jpaboard.dto.CategoryDTO;
 import com.example.jpaboard.entity.User;
+import com.example.jpaboard.entity.UserRole;
 import com.example.jpaboard.service.BoardService;
 import com.example.jpaboard.service.CategoryService;
 import com.example.jpaboard.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,14 @@ public class BoardController {
             return auth.getName();
         }
         return null;
+    }
+
+    @ModelAttribute("isAdmin")
+    public boolean isAdmin(Authentication auth) {
+        if (auth != null) {
+            return userService.checkAdmin(auth.getName());
+        }
+        return false;
     }
 
     @GetMapping("/new")
@@ -92,7 +102,13 @@ public class BoardController {
     public String delete(@PathVariable Long id, Authentication auth) {
         BoardDTO board = boardService.findById(id);
 
-        if (!board.getUser().getLoginId().equals(auth.getName())) {
+        // 관리자 여부 확인
+        boolean isAdmin = userService.checkAdmin(auth.getName());
+        // 작성자 확인
+        boolean isWriter = board.getUser().getLoginId().equals(auth.getName());
+
+        // 작성자 & 관리자 삭제 가능
+        if (!isAdmin && !isWriter) {
             throw new IllegalStateException("잘못된 접근입니다.");
         }
 

@@ -12,6 +12,6 @@
     <a class="userNav" th:onclick="|location.href='@{/board/new}'|">글 작성</a> |
 
     <!-- 추후 수정 -->
-    <a class="userNav" th:if="${loginId == 'admin'}" th:onclick="|location.href='@{/admin/admin}'|">관리자 페이지</a>
+    <a class="userNav" th:if="${isAdmin}" th:onclick="|location.href='@{/admin/admin}'|">관리자 페이지</a>
   </div>
 </section>

@@ -32,6 +32,15 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
+    public boolean checkAdmin(String loginId) {
+        User user = getLoginUserByLoginId(loginId);
+
+        if (user.getRole().equals(UserRole.ADMIN)) {
+            return true;
+        }
+        return false;
+    }
+
     @Transactional
     public void join(JoinRequest req) {
         userRepository.save(req.toUser());

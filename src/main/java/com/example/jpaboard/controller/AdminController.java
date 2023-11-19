@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -37,6 +38,14 @@ public class AdminController {
             return auth.getName();
         }
         return null;
+    }
+
+    @ModelAttribute("isAdmin")
+    public boolean isAdmin(Authentication auth) {
+        if (auth != null) {
+            return userService.checkAdmin(auth.getName());
+        }
+        return false;
     }
 
     @GetMapping("/admin")

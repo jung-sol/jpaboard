@@ -51,6 +51,7 @@
 
                 <div th:unless="${loginId == board.user.loginId}" class="fl" style="text-align: right">
                     <input class="btn-two orange" type="button" value="목록" onclick="goList()" />
+                    <input th:if="${isAdmin}" class="btn-two orange" type="button" value="삭제" onclick="goDelete()" />
                 </div>
             </div>
 

@@ -41,6 +41,14 @@ public class UserController {
         return null;
     }
 
+    @ModelAttribute("isAdmin")
+    public boolean isAdmin(Authentication auth) {
+        if (auth != null) {
+            return userService.checkAdmin(auth.getName());
+        }
+        return false;
+    }
+
     @GetMapping("/join")
     public String joinForm(Model model) {
         model.addAttribute("joinRequest", new JoinRequest());
