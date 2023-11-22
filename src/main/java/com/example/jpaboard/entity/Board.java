@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -29,6 +31,9 @@ public class Board extends BaseEntity{
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)
+    private List<Heart> heartList = new ArrayList<>();
 
     public static Board toBoard(BoardDTO boardDTO) {
         Board board = new Board();

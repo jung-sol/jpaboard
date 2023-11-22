@@ -44,7 +44,7 @@
 
             <div id="view-menu">
                 <div class="fl" style="text-align: right">
-                    <input class="btn-two orange" type="button" value="좋아요한 글 보기" onclick="goList()" />
+                    <input class="btn-two orange" type="button" value="좋아요한 글 보기" onclick="goMyHeart()" />
                     <input class="btn-two orange" type="button" value="내가 작성한 글 보기" onclick="goMyList()" />
                     <input class="btn-two orange" type="button" value="내가 작성한 댓글 보기" onclick="goDelete()" />
                 </div>
@@ -59,6 +59,10 @@
 
     const goMyList = () => {
         location.href = "/board/user/" + [[${loginId}]];
+    }
+
+    const goMyHeart = () => {
+        location.href = "/board/heart/user/" + [[${loginId}]];
     }
 
 </script>

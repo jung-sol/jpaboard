@@ -11390,3 +11390,15 @@ button[class*="btn"] {border: 0;}
 .error-input {
   border-color: red;
 }
+
+#like{
+  fill:#d0cdcd;
+  float: left;
+  position: relative;
+  left: 50%;
+}
+
+#like.active{
+  fill:#ff5252;
+}
+

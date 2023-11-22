@@ -18,6 +18,8 @@
 
             <table class="table" style="text-align: left">
                 <tr>
+                    <th>게시판</th>
+                    <td th:text="${board.category.name}">게시판</td>
                     <th>제목</th>
                     <td th:text="${board.title}">제목</td>
                     <th>작성일</th>
@@ -43,16 +45,19 @@
             <br><br><br><hr>
 
             <div id="view-menu">
-                <div th:if="${loginId == board.user.loginId}" class="fl" style="text-align: right">
+                <span>
+                    <svg id="like" xmlns="http://www.w3.org/2000/svg" height="4em" viewBox="0 0 512 512"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
+                </span>
+                <span th:if="${loginId == board.user.loginId}" class="fl" style="float: right">
                     <input class="btn-two orange" type="button" value="수정" onclick="goModify()" />
                     <input class="btn-two orange" type="button" value="삭제" onclick="goDelete()" />
                     <input class="btn-two orange" type="button" value="목록" onclick="goList()" />
-                </div>
+                </span>
 
-                <div th:unless="${loginId == board.user.loginId}" class="fl" style="text-align: right">
+                <span th:unless="${loginId == board.user.loginId}" class="fl" style="float: right">
                     <input class="btn-two orange" type="button" value="목록" onclick="goList()" />
                     <input th:if="${isAdmin}" class="btn-two orange" type="button" value="삭제" onclick="goDelete()" />
-                </div>
+                </span>
             </div>
 
 
@@ -61,6 +66,19 @@
     <hr class="m-0" />
 </div>
 <script th:inline="javascript">
+
+    var heartState = [[${heartState}]];
+    var like = document.getElementById("like");
+
+    if(heartState != null) {
+        like.classList.toggle('active');
+    }
+
+    like.addEventListener('click',function(){
+        location.href = "/board/heart/" + [[${board.id}]];
+
+    });
+
 
     const goModify = () => {
         location.href = "/board/update/" + [[${board.id}]];

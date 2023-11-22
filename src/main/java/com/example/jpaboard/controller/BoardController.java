@@ -2,10 +2,12 @@ package com.example.jpaboard.controller;
 
 import com.example.jpaboard.dto.BoardDTO;
 import com.example.jpaboard.dto.CategoryDTO;
+import com.example.jpaboard.entity.Heart;
 import com.example.jpaboard.entity.User;
 import com.example.jpaboard.entity.UserRole;
 import com.example.jpaboard.service.BoardService;
 import com.example.jpaboard.service.CategoryService;
+import com.example.jpaboard.service.HeartService;
 import com.example.jpaboard.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,6 +27,7 @@ public class BoardController {
     private final CategoryService categoryService;
     private final BoardService boardService;
     private final UserService userService;
+    private final HeartService heartService;
 
     @ModelAttribute("categories")
     public List<CategoryDTO> categories() {
@@ -65,10 +69,16 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable Long id, Model model) {
+    public String findById(@PathVariable Long id, Model model, Authentication auth) {
         boardService.updateHits(id);
         BoardDTO board = boardService.findById(id);
         model.addAttribute("board", board);
+
+        if (auth != null) {
+            User user = userService.getLoginUserByLoginId(auth.getName());
+            Long heart_id = heartService.checkStatusLike(id, user.getId());
+            model.addAttribute("heartState", heart_id);
+        }
 
         return "board/detailBoard";
     }
@@ -117,6 +127,14 @@ public class BoardController {
         return "redirect:/";
     }
 
+    @GetMapping("/heart/{id}")
+    public String heart(@PathVariable Long id, Authentication auth) {
+        User user = userService.getLoginUserByLoginId(auth.getName());
+        heartService.heart(id, user.getId());
+
+        return "redirect:/board/" + id;
+    }
+
     @GetMapping("/category/{id}")
     public String findByCategoryId(@PathVariable Long id, Model model) {
         List<BoardDTO> boards = boardService.findByCategoryId(id);
@@ -134,6 +152,17 @@ public class BoardController {
         List<BoardDTO> boards = boardService.findByUserLoginId(loginId);
         model.addAttribute("boards", boards);
         model.addAttribute("pageName", loginId + "님이 작성한 글");
+
+        return "index";
+    }
+
+    @GetMapping("/heart/user/{loginId}")
+    public String findByHeart(@PathVariable String loginId, Model model) {
+        User user = userService.getLoginUserByLoginId(loginId);
+        List<BoardDTO> boards = heartService.findByHeart(user);
+
+        model.addAttribute("boards", boards);
+        model.addAttribute("pageName", loginId + "님이 좋아요한 글");
 
         return "index";
     }

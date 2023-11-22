@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()            // 인증, 인가가 필요한 URL 지정
-                .antMatchers("/user/info").authenticated()  // authenticated() : 해당 URL에 진입하기 위해서 Authentication(인증, 로그인)이 필요함
+                .antMatchers("/user/info", "/board/heart/**").authenticated()  // authenticated() : 해당 URL에 진입하기 위해서 Authentication(인증, 로그인)이 필요함
                 .antMatchers("/admin/**").hasAuthority(UserRole.ADMIN.name())  // hasAuthority() : 해당 URL에 진입하기 위해서 Authorization(인가, ex)권한이 ADMIN인 유저만 진입 가능)이 필요함, URL에 ** 사용 : ** 위치에 어떤 값이 들어와도 적용시킴
                 .anyRequest().permitAll()       // permitAll() : Authentication, Authorization 필요 없이 통과
                 .and()

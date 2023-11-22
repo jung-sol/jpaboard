@@ -32,6 +32,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Board> boards = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Heart> heartList = new ArrayList<>();
+
     public void updatePassword(String encodedPassword) {
         this.password = encodedPassword;
     }
