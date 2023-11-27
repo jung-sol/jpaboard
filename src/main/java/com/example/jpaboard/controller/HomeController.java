@@ -10,6 +10,9 @@ import com.example.jpaboard.service.BoardService;
 import com.example.jpaboard.service.CategoryService;
 import com.example.jpaboard.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,23 +53,19 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(Model model, Authentication auth){
+    public String home(@PageableDefault(page = 1) Pageable pageable, Model model){
         List<CategoryDTO> categories = categoryService.list();
         model.addAttribute("categories", categories);
 
-        List<BoardDTO> boards = boardService.list();
+        Page<BoardDTO> boards = boardService.paging(pageable);
+        int blockLimit = 3;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = ((startPage + blockLimit - 1) < boards.getTotalPages()) ? startPage + blockLimit - 1 : boards.getTotalPages();
+
         model.addAttribute("boards", boards);
-
-        /*
-        if (auth != null) {
-            model.addAttribute("loginId", auth.getName());
-
-            if (userService.checkAdmin(auth.getName())) {
-                model.addAttribute("isAdmin", true);
-            }
-        }
-
-         */
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "index";
-    }}
+    }
+}

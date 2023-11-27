@@ -39,6 +39,15 @@
 
                 </table>
 
+                <br>
+                <!-- Paging -->
+                <span style="text-align: center" th:each="page: ${#numbers.sequence(startPage, endPage)}">
+                    <span th:if="${page == boards.number + 1}" th:text="${page}"></span>
+                    <span th:unless="${page == boards.number + 1}">
+                        <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                    </span>
+                </span>
+
 
             </div>
         </section>
