@@ -10,6 +10,9 @@ import com.example.jpaboard.service.CategoryService;
 import com.example.jpaboard.service.HeartService;
 import com.example.jpaboard.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -136,9 +139,16 @@ public class BoardController {
     }
 
     @GetMapping("/category/{id}")
-    public String findByCategoryId(@PathVariable Long id, Model model) {
-        List<BoardDTO> boards = boardService.findByCategoryId(id);
+    public String findByCategoryId(@PathVariable Long id, Model model, @PageableDefault(page = 1) Pageable pageable) {
+        Page<BoardDTO> boards = boardService.findByCategoryId(id, pageable);
+
+        int blockLimit = 3;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = ((startPage + blockLimit - 1) < boards.getTotalPages()) ? startPage + blockLimit - 1 : boards.getTotalPages();
+
         model.addAttribute("boards", boards);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         model.addAttribute("currentCategoryId", id);
 
         return "index";
@@ -148,9 +158,16 @@ public class BoardController {
     로그인 아이디로 글 목록 return
      */
     @GetMapping("/user/{loginId}")
-    public String findByLoginId(@PathVariable String loginId, Model model) {
-        List<BoardDTO> boards = boardService.findByUserLoginId(loginId);
+    public String findByLoginId(@PathVariable String loginId, Model model, @PageableDefault(page = 1) Pageable pageable) {
+        Page<BoardDTO> boards = boardService.findByUserLoginId(loginId, pageable);
+
+        int blockLimit = 3;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = ((startPage + blockLimit - 1) < boards.getTotalPages()) ? startPage + blockLimit - 1 : boards.getTotalPages();
+
         model.addAttribute("boards", boards);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         model.addAttribute("pageName", loginId + "님이 작성한 글");
 
         return "index";

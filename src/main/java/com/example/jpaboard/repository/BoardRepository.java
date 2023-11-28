@@ -3,6 +3,8 @@ package com.example.jpaboard.repository;
 import com.example.jpaboard.entity.Board;
 import com.example.jpaboard.entity.Category;
 import com.example.jpaboard.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,9 +19,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     void updateHits(@Param("id") Long id);
 
     @Query(value = "select b from Board as b where b.category = :category")
+    Page<Board> findByCategory(@Param("category") Category category, Pageable pageable);
+
+    @Query(value = "select b from Board as b where b.category = :category")
     List<Board> findByCategory(@Param("category") Category category);
 
     @Query(value = "select b from Board as b where b.user = :user")
-    List<Board> findByUserId(@Param("user") User user);
+    Page<Board> findByUserId(@Param("user") User user, Pageable pageable);
 
 }

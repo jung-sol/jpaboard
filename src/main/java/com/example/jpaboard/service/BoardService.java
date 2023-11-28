@@ -44,26 +44,6 @@ public class BoardService {
         return board.getId();
     }
 
-    public List<BoardDTO> list() {
-        List<Board> boardList = boardRepository.findAll();
-        List<BoardDTO> boardDTOList = new ArrayList<>();
-        for (Board board : boardList) {
-            boardDTOList.add(BoardDTO.toBoardDTO(board));
-        }
-        return boardDTOList;
-    }
-
-    public Page<BoardDTO> paging(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1;
-        int pageLimit = 3;
-
-        // 페이지당 3개 글, id 기준으로 내림차순 정렬
-        Page<Board> boardEntities =
-                boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-
-        return boardEntities.map(BoardDTO::toBoardDTO);
-    }
-
     public BoardDTO findById(Long id) {
         Optional<Board> optionalBoard = boardRepository.findById(id);
 
@@ -100,31 +80,50 @@ public class BoardService {
         boardRepository.updateHits(id);
     }
 
-    public List<BoardDTO> findByCategoryId(Long categoryId) {
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-        List<Board> boards = boardRepository.findByCategory(optionalCategory.get());
-        List<BoardDTO> boardDTOS = new ArrayList<>();
-        for (Board board : boards) {
-            boardDTOS.add(BoardDTO.toBoardDTO(board));
-        }
 
-        return boardDTOS;
+    public List<BoardDTO> list() {
+        List<Board> boardList = boardRepository.findAll();
+        List<BoardDTO> boardDTOList = new ArrayList<>();
+        for (Board board : boardList) {
+            boardDTOList.add(BoardDTO.toBoardDTO(board));
+        }
+        return boardDTOList;
     }
 
-    public List<BoardDTO> findByUserLoginId(String userLoginId) {
+    public Page<BoardDTO> paging(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 3;
+
+        // 페이지당 3개 글, id 기준으로 내림차순 정렬
+        Page<Board> boardEntities =
+                boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        return boardEntities.map(BoardDTO::toBoardDTO);
+    }
+
+    public Page<BoardDTO> findByCategoryId(Long categoryId, Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 3;
+
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        Page<Board> boards = boardRepository.findByCategory(optionalCategory.get(), PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        return boards.map(BoardDTO::toBoardDTO);
+    }
+
+    public Page<BoardDTO> findByUserLoginId(String userLoginId, Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 3;
+
         Optional<User> optionalUser = userRepository.findByLoginId(userLoginId);
 
         if (optionalUser.isEmpty()) {
             return null;
         }
 
-        List<Board> boards = boardRepository.findByUserId(optionalUser.get());
-        List<BoardDTO> boardDTOS = new ArrayList<>();
-        for (Board board : boards) {
-            boardDTOS.add(BoardDTO.toBoardDTO(board));
-        }
+        Page<Board> boards = boardRepository.findByUserId(optionalUser.get(), PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
 
-        return boardDTOS;
+        return boards.map(BoardDTO::toBoardDTO);
     }
 
 
