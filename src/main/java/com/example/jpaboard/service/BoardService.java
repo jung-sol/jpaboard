@@ -80,17 +80,7 @@ public class BoardService {
         boardRepository.updateHits(id);
     }
 
-
-    public List<BoardDTO> list() {
-        List<Board> boardList = boardRepository.findAll();
-        List<BoardDTO> boardDTOList = new ArrayList<>();
-        for (Board board : boardList) {
-            boardDTOList.add(BoardDTO.toBoardDTO(board));
-        }
-        return boardDTOList;
-    }
-
-    public Page<BoardDTO> paging(Pageable pageable) {
+    public Page<BoardDTO> list(Pageable pageable) {
         int page = pageable.getPageNumber() - 1;
         int pageLimit = 3;
 
@@ -122,6 +112,15 @@ public class BoardService {
         }
 
         Page<Board> boards = boardRepository.findByUserId(optionalUser.get(), PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        return boards.map(BoardDTO::toBoardDTO);
+    }
+
+    public Page<BoardDTO> searchByTitle(String keyword, Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 3;
+
+        Page<Board> boards = boardRepository.findByTitleContaining(keyword, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
 
         return boards.map(BoardDTO::toBoardDTO);
     }

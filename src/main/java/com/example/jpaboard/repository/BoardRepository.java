@@ -27,4 +27,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = "select b from Board as b where b.user = :user")
     Page<Board> findByUserId(@Param("user") User user, Pageable pageable);
 
+    Page<Board> findByTitleContaining(String keyword, Pageable pageable);
+
 }

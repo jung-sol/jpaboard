@@ -43,8 +43,8 @@
 
                 <!-- Search -->
                 <div style="text-align: center">
-                    <form>
-                        <input type="search" placeholder="Search">
+                    <form th:action="@{/}" method="get">
+                        <input type="search" placeholder="Search" name="keyword">
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -56,19 +56,41 @@
                     <ul class="pagination">
                         <li class="page-item" th:each="page: ${#numbers.sequence(startPage, endPage)}">
                             <a class="page-link" th:if="${page == boards.number + 1}" th:text="${page}">1</a>
-                            <a class="page-link" th:unless="${page == boards.number + 1}" th:href="@{/(page=${page})}" th:text="${page}">1</a>
+                            <a class="page-link paging" th:unless="${page == boards.number + 1}" th:text="${page}">1</a>
                         </li>
                     </ul>
                 </div>
-
-
-
 
             </div>
         </section>
         <hr class="m-0" />
     </div>
+    <script th:inline="javascript">
 
+        const url = new URLSearchParams();
+        var keyword = [[${keyword}]];
+        var page;
+        var pages = document.getElementsByClassName("paging");
+
+        for (var i = 0; i < pages.length; i++) {
+            var paging = pages[i];
+
+            paging.addEventListener('click', function() {
+                page = this.text;
+
+                if (!!keyword) {
+                    url.append("keyword", keyword);
+                    url.append("page", page);
+
+                } else {
+                    url.append("page", page);
+                }
+
+                location.href = "/?" + url;
+            });
+        }
+
+    </script>
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->

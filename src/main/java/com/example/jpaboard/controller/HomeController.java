@@ -53,11 +53,20 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(@PageableDefault(page = 1) Pageable pageable, Model model){
+    public String home(@PageableDefault(page = 1) Pageable pageable, Model model, String keyword){
+        Page<BoardDTO> boards = null;
+
         List<CategoryDTO> categories = categoryService.list();
         model.addAttribute("categories", categories);
 
-        Page<BoardDTO> boards = boardService.paging(pageable);
+        if (keyword == null || keyword.isEmpty()) {
+            boards = boardService.list(pageable);
+        } else {
+            boards = boardService.searchByTitle(keyword, pageable);
+            model.addAttribute("keyword", keyword);
+            model.addAttribute("pageName", keyword + " (으)로 검색한 결과 입니다.");
+        }
+
         int blockLimit = 3;
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
         int endPage = ((startPage + blockLimit - 1) < boards.getTotalPages()) ? startPage + blockLimit - 1 : boards.getTotalPages();
