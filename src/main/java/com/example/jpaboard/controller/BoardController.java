@@ -2,13 +2,11 @@ package com.example.jpaboard.controller;
 
 import com.example.jpaboard.dto.BoardDTO;
 import com.example.jpaboard.dto.CategoryDTO;
+import com.example.jpaboard.dto.CommentDTO;
 import com.example.jpaboard.entity.Heart;
 import com.example.jpaboard.entity.User;
 import com.example.jpaboard.entity.UserRole;
-import com.example.jpaboard.service.BoardService;
-import com.example.jpaboard.service.CategoryService;
-import com.example.jpaboard.service.HeartService;
-import com.example.jpaboard.service.UserService;
+import com.example.jpaboard.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +29,7 @@ public class BoardController {
     private final BoardService boardService;
     private final UserService userService;
     private final HeartService heartService;
+    private final CommentService commentService;
 
     @ModelAttribute("categories")
     public List<CategoryDTO> categories() {
@@ -75,7 +74,10 @@ public class BoardController {
     public String findById(@PathVariable Long id, Model model, Authentication auth) {
         boardService.updateHits(id);
         BoardDTO board = boardService.findById(id);
+        List<CommentDTO> comments = commentService.findByBoardOrderBy(id);
+
         model.addAttribute("board", board);
+        model.addAttribute("comments", comments);
 
         if (auth != null) {
             User user = userService.getLoginUserByLoginId(auth.getName());
@@ -183,5 +185,16 @@ public class BoardController {
 
         return "index";
     }
+
+    @PostMapping("/comment")
+    public String saveComment(@ModelAttribute CommentDTO commentDTO, Authentication auth) {
+        User user = userService.getLoginUserByLoginId(auth.getName());
+        commentDTO.setUser(user);
+
+        commentService.save(commentDTO);
+
+        return "redirect:/board/" + commentDTO.getBoard().getId();
+    }
+
 
 }
