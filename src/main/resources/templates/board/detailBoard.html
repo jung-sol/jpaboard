@@ -72,43 +72,13 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
-                            <div class="form-inline mb-2" th:fragment="renderComments(comments)">
+                            <div class="form-inline mb-2">
                                 <!-- Comments section-->
-                                <section class="mb-1" th:each="comment : ${comments}">
-                                    <div class="card bg-light">
-
-                                        <div class="card-body">
-                                            <!-- 댓글 목록-->
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0">
-                                                    <img class="rounded-circle" src="/assets/img/penguin.jpg" alt="..." style="width: 50px;"/>
-                                                </div>
-                                                <div class="ms-3">
-                                                    <div class="fw-bold" th:text="${comment.user.nickname}"></div>
-                                                    <div class="fw-light" th:text="*{#temporals.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}" style="text-align: right"></div>
-                                                    <br>
-                                                    [[${comment.content}]]
-                                                </div>
-                                            </div>
-                                            <span style="float: right">
-                                                <button type="button" class="reply_btn" style="width: 50px; height: 30px; border: none" th:onclick="|goReply(${comment.id})|">답글</button>
-                                            </span>
-
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Recursively call renderComments for children -->
-                                    <div th:if="${comment.children}">
-                                        <div th:replace="board/detailBoard :: renderComments(${comment.children})"></div>
-                                    </div>
+                                <section class="mb-1">
+                                    <!-- Recursive function to render comments -->
+                                    <div th:replace="fragments/comments :: renderComments(${comments}, 0)"></div>
                                 </section>
-
-
                             </div>
-
-
-
 
                             <!-- 댓글 입력-->
                             <form method="post" action="/board/comment">
@@ -116,10 +86,6 @@
                                 <textarea class="form-control" id="input_comment" name="content" rows="3"></textarea>
                                 <button type="submit" class="btn btn-dark mt-3">댓글 등록</button>
                             </form>
-
-
-                            <!-- Render the initial comments -->
-                            <div th:replace="fragments/comments :: renderComments(${comments})"></div>
                         </li>
                     </ul>
                 </div>

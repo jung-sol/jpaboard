@@ -1,0 +1,40 @@
+<!-- fragments/comments.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="renderComments(comments, depth)">
+    <section class="mb-1" th:each="comment, commentIndex : ${comments}">
+        <div>
+            <div>
+                <div class="card bg-light" th:style="'margin-left: ' + (${depth} * 30) + 'px;'">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <div class="flex-shrink-0">
+                                <img th:if="${depth > 0}" src="/assets/img/turn.jpg" alt="turn" style="width: 20px; height: 20px; margin-right: 5px;"/>
+                                <img class="rounded-circle" src="/assets/img/penguin.jpg" alt="..." style="width: 50px;"/>
+                            </div>
+
+                            <div class="ms-3">
+                                <div class="fw-bold" th:text="${comment.user.nickname}"></div>
+                                <div class="fw-light" th:text="*{#temporals.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}" style="text-align: right"></div>
+                                <br>
+                                [[${comment.content}]]
+                            </div>
+
+                            <span style="float: right">
+                                <button type="button" class="reply_btn" style="width: 50px; height: 30px; border: none" th:onclick="|goReply(${comment.id})|">답글</button>
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Recursively call renderComments for children -->
+        <div th:if="${comment.children}">
+            <div th:replace="fragments/comments :: renderComments(${comment.children}, ${depth + 1})"></div>
+        </div>
+    </section>
+</div>
+</html>
