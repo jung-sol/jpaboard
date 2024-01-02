@@ -42,7 +42,6 @@
                 <div class="fl" style="text-align: right">
                     <input class="btn-two orange" type="button" value="회원 글 목록" onclick="goList()" />
                     <input class="btn-two orange" type="button" value="권한 수정" onclick="goModify()" />
-                    <input class="btn-two orange" type="button" value="탈퇴" onclick="goDelete()" />
                 </div>
             </div>
 
@@ -72,12 +71,6 @@
             const chkVal = document.querySelector("input[type=radio][name=user]:checked").id;
             location.href = "/admin/user/update/" + chkVal
         }
-    }
-
-    const goDelete = () => {
-        /*
-        아직 구현 안함
-         */
     }
 
 </script>
