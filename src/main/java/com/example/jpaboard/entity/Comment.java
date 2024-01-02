@@ -20,7 +20,7 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -35,7 +35,7 @@ public class Comment extends BaseEntity {
     private Comment parent;
 
     @Builder.Default
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", orphanRemoval = false)
     private List<Comment> children = new ArrayList<>();
 
 }

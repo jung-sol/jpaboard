@@ -20,7 +20,7 @@ public class Category {
     @Column(length = 20)
     private String name;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
 
     public static Category toCategory(CategoryDTO categoryDTO) {

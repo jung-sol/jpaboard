@@ -69,7 +69,7 @@ public class HomeController {
 
         int blockLimit = 3;
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
-        int endPage = ((startPage + blockLimit - 1) < boards.getTotalPages()) ? startPage + blockLimit - 1 : boards.getTotalPages();
+        int endPage = boards.getTotalPages() == 0 ? 1 : Math.min((startPage + blockLimit - 1), boards.getTotalPages());
 
         model.addAttribute("boards", boards);
         model.addAttribute("startPage", startPage);

@@ -2,12 +2,18 @@ package com.example.jpaboard.service;
 
 import com.example.jpaboard.dto.BoardDTO;
 import com.example.jpaboard.entity.Board;
+import com.example.jpaboard.entity.Category;
 import com.example.jpaboard.entity.Heart;
 import com.example.jpaboard.entity.User;
 import com.example.jpaboard.repository.BoardRepository;
+import com.example.jpaboard.repository.CommentCustomRepository;
 import com.example.jpaboard.repository.HeartRepository;
 import com.example.jpaboard.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +29,7 @@ public class HeartService {
     private final HeartRepository heartRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final CommentCustomRepository commentCustomRepository;
 
     @Transactional
     public void heart(Long board_id, Long user_id) {
@@ -68,5 +75,14 @@ public class HeartService {
             boards.add(BoardDTO.toBoardDTO(optionalBoard.get()));
         }
         return boards;
+    }
+
+    public Page<BoardDTO> findHeartByUser(User user, Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 3;
+
+        Page<Board> boards = commentCustomRepository.findBoardByHeart(user.getId(), PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        return boards.map(BoardDTO::toBoardDTO);
     }
 }

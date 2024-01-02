@@ -24,16 +24,19 @@ public class Board extends BaseEntity{
 
     private int boardHits;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "board", orphanRemoval = true)
     private List<Heart> heartList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
 
     public static Board toBoard(BoardDTO boardDTO) {
         Board board = new Board();

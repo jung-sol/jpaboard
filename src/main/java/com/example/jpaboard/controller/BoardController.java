@@ -30,6 +30,7 @@ public class BoardController {
     private final UserService userService;
     private final HeartService heartService;
     private final CommentService commentService;
+    int blockLimit = 3;
 
     @ModelAttribute("categories")
     public List<CategoryDTO> categories() {
@@ -144,9 +145,9 @@ public class BoardController {
     public String findByCategoryId(@PathVariable Long id, Model model, @PageableDefault(page = 1) Pageable pageable) {
         Page<BoardDTO> boards = boardService.findByCategoryId(id, pageable);
 
-        int blockLimit = 3;
+
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
-        int endPage = ((startPage + blockLimit - 1) < boards.getTotalPages()) ? startPage + blockLimit - 1 : boards.getTotalPages();
+        int endPage = boards.getTotalPages() == 0 ? 1 : Math.min((startPage + blockLimit - 1), boards.getTotalPages());
 
         model.addAttribute("boards", boards);
         model.addAttribute("startPage", startPage);
@@ -163,9 +164,8 @@ public class BoardController {
     public String findByLoginId(@PathVariable String loginId, Model model, @PageableDefault(page = 1) Pageable pageable) {
         Page<BoardDTO> boards = boardService.findByUserLoginId(loginId, pageable);
 
-        int blockLimit = 3;
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
-        int endPage = ((startPage + blockLimit - 1) < boards.getTotalPages()) ? startPage + blockLimit - 1 : boards.getTotalPages();
+        int endPage = boards.getTotalPages() == 0 ? 1 : Math.min((startPage + blockLimit - 1), boards.getTotalPages());
 
         model.addAttribute("boards", boards);
         model.addAttribute("startPage", startPage);
@@ -176,11 +176,16 @@ public class BoardController {
     }
 
     @GetMapping("/heart/user/{loginId}")
-    public String findByHeart(@PathVariable String loginId, Model model) {
+    public String findByHeart(@PathVariable String loginId, Model model, @PageableDefault(page = 1) Pageable pageable) {
         User user = userService.getLoginUserByLoginId(loginId);
-        List<BoardDTO> boards = heartService.findByHeart(user);
+        Page<BoardDTO> boards = heartService.findHeartByUser(user, pageable);
+
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = boards.getTotalPages() == 0 ? 1 : Math.min((startPage + blockLimit - 1), boards.getTotalPages());
 
         model.addAttribute("boards", boards);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         model.addAttribute("pageName", loginId + "님이 좋아요한 글");
 
         return "index";
